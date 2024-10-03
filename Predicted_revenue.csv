@@ -1,0 +1,36 @@
+site,payment_method,revenue_centre,business_unit,predicted_revenue
+Airport Main,Cash,Ambulance Service Fee,OPD Services,30808.800901840066
+Airport Main,Cash,Consultation Fees (GP),OPD Services,77832.91062074948
+Airport Main,Cash,Dental Clinics,Dental Services,63853.01506057065
+Airport Main,Cash,Emergency Fees,Hospital Services,108408.31199000479
+Airport Main,Cash,Health & Wellness Fee,Health Hub,82421.24053657193
+Airport Main,Cash,Laboratory Fees,Diagnostic Centre,84911.04473439905
+Airport Main,Cash,Medical Exams Fees,Hospital Services,52983.670137989706
+Airport Main,Cash,PCR Revenue,Diagnostic Centre,7326.828180411494
+Airport Main,Cash,Pharmacy,Pharmacy,59097.91371335071
+Airport Main,Cash,Radiology,Diagnostic Centre,63118.284780784204
+Airport Main,Cash,Registration Fees,OPD Services,42416.13507329924
+Airport Main,Cash,Specialist Fees,OPD Services,83466.93909147863
+Airport Main,Cash,Ward/Detention,Hospital Services,1209727.4147375496
+Airport Main,Credit,Ambulance Service Fee,OPD Services,46737.893519561876
+Airport Main,Credit,Consultation Fees (GP),OPD Services,132368.95770574568
+Airport Main,Credit,Dental Clinics,Dental Services,241979.36331275984
+Airport Main,Credit,Emergency Fees,Hospital Services,107049.33317958398
+Airport Main,Credit,Health & Wellness Fee,Health Hub,128633.01441576854
+Airport Main,Credit,ICU Fees,Hospital Services,24.913599318130508
+Airport Main,Credit,Laboratory Fees,Diagnostic Centre,196367.68054428176
+Airport Main,Credit,Medical Exams Fees,Hospital Services,-755.4379181375242
+Airport Main,Credit,Mother & Child Fees,Hospital Services,24842.436738971584
+Airport Main,Credit,Other,Other,35466.811275069456
+Airport Main,Credit,PCR Revenue,Diagnostic Centre,32455.87678641401
+Airport Main,Credit,Pharmacy,Pharmacy,197462.177571146
+Airport Main,Credit,Radiology,Diagnostic Centre,119818.91660665833
+Airport Main,Credit,Registration Fees,OPD Services,53393.43423769879
+Airport Main,Credit,Specialist Fees,OPD Services,155791.57523718767
+Airport Main,Credit,Theatre Fees,Hospital Services,204897.33338065087
+Airport Main,Credit,Ward/Detention,Hospital Services,110375.75163744547
+Airport Main,Credit,Family Physician Fees,OPD Services,46737.893519561876
+Airport Main,Credit,NICU,Hospital Services,-1812.019516383301
+Airport Main,Cash,Family Physician Fees,OPD Services,30808.800901840066
+Airport Main,Cash,Other,Other,21191.316530651337
+Airport Main,Cash,Theatre Fees,Hospital Services,248771.10922127933
