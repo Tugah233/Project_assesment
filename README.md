@@ -1,4 +1,4 @@
-# project_assesment
+# project_assessment
 Overview
 This project is designed to retrieve patient records from the medihealth_patients table, match them with data from the mis_patients table, and calculate match scores based on specific criteria such as names, gender, birth date, and contact information. The matched records and their respective scores are written to a CSV file.
 
