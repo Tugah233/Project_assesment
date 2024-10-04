@@ -1,7 +1,10 @@
 import os
 import csv
 import psycopg2
+from dotenv import load_dotenv
 
+# Load environment variables from the .env file
+load_dotenv()
 
 # Fetch database credentials from environment variables
 DB_NAME = os.getenv('DB_NAME')
@@ -32,18 +35,22 @@ def search_patient():
         medihealth_patients = cur.fetchall()
 
         # Open a CSV file for writing results
-        with open('patient_search_results.csv', mode='w', newline='') as file:
+        with open('matches.csv', mode='w', newline='') as file:
             writer = csv.writer(file)
 
             # Write header row
             writer.writerow([
                 "mr_number", "first_name", "last_name", "gender", "birth_date", "mobile", "email", 
-                "patient_id", "pfirst_name", "plast_name", "pgender", "pdob", "pmobile", "pemail",
+                "patient_id", "pfirst_name", "plast_name", "pgender", "pdob","housemobile", "officemobile", "pmobile", "pemail",
                 "mr_number_score", "first_name_score", "last_name_score", "gender_score", 
-                "birth_date_score", "mobile_score", "email_score", "match_score"
+                "birth_date_score", "mobile_score", "housemobile_score", "officemobile_score", "email_score", "match_score"
             ])
 
+            match_count = 0
+
             # Loop through each patient data and search for matches
+            print("Processing patients...")
+
             for patient in medihealth_patients:
                 mr_number, first_name, last_name, gender, birth_date, mobile, email = patient
 
@@ -62,23 +69,29 @@ def search_patient():
                         mp.plastname AS plast_name,
                         mp.gender AS pgender,
                         mp.dob AS pdob,
+                        mp.housetelephoneno AS housemobile,
+                        mp.officetelephoneno AS officemobile,
                         mp.mobile AS pmobile,
                         mp.email AS pemail,
-                        CASE WHEN mh.mr_number = mp.patient_id THEN 35 ELSE 0 END AS mr_number_score,
-                        CASE WHEN LOWER(mh.first_name) = LOWER(mp.pfirstname) THEN 10 ELSE 0 END AS first_name_score,
-                        CASE WHEN LOWER(mh.last_name) = LOWER(mp.plastname) THEN 15 ELSE 0 END AS last_name_score,
+                        CASE WHEN mh.mr_number = mp.patient_id THEN 10 ELSE 0 END AS mr_number_score,
+                        CASE WHEN LOWER(mh.first_name) = LOWER(mp.pfirstname) THEN 7 ELSE 0 END AS first_name_score,
+                        CASE WHEN LOWER(mh.last_name) = LOWER(mp.plastname) THEN 8 ELSE 0 END AS last_name_score,
                         CASE WHEN LOWER(mh.gender) = LOWER(mp.gender) THEN 5 ELSE 0 END AS gender_score,
-                        CASE WHEN mh.birth_date = mp.dob THEN 15 ELSE 0 END AS birth_date_score,
-                        CASE WHEN mh.mobile = mp.mobile THEN 10 ELSE 0 END AS mobile_score,
-                        CASE WHEN LOWER(mh.email) = LOWER(mp.email) THEN 10 ELSE 0 END AS email_score,
+                        CASE WHEN mh.birth_date = mp.dob THEN 8 ELSE 0 END AS birth_date_score,
+                        CASE WHEN mh.mobile = mp.mobile THEN 6 ELSE 0 END AS mobile_score,
+                        CASE WHEN mh.mobile = mp.housetelephoneno THEN 4 ELSE 0 END AS housemobile_score,
+                        CASE WHEN mh.mobile = mp.officetelephoneno THEN 3 ELSE 0 END AS officemobile_score,
+                        CASE WHEN LOWER(mh.email) = LOWER(mp.email) THEN 7 ELSE 0 END AS email_score,
                         (
-                            CASE WHEN mh.mr_number = mp.patient_id THEN 35 ELSE 0 END +
-                            CASE WHEN LOWER(mh.first_name) = LOWER(mp.pfirstname) THEN 10 ELSE 0 END +
-                            CASE WHEN LOWER(mh.last_name) = LOWER(mp.plastname) THEN 15 ELSE 0 END +
+                            CASE WHEN mh.mr_number = mp.patient_id THEN 10 ELSE 0 END +
+                            CASE WHEN LOWER(mh.first_name) = LOWER(mp.pfirstname) THEN 7 ELSE 0 END +
+                            CASE WHEN LOWER(mh.last_name) = LOWER(mp.plastname) THEN 8 ELSE 0 END +
                             CASE WHEN LOWER(mh.gender) = LOWER(mp.gender) THEN 5 ELSE 0 END +
-                            CASE WHEN mh.birth_date = mp.dob THEN 15 ELSE 0 END +
-                            CASE WHEN mh.mobile = mp.mobile THEN 10 ELSE 0 END +
-                            CASE WHEN LOWER(mh.email) = LOWER(mp.email) THEN 10 ELSE 0 END
+                            CASE WHEN mh.birth_date = mp.dob THEN 8 ELSE 0 END +
+                            CASE WHEN mh.mobile = mp.mobile THEN 6 ELSE 0 END +
+                            CASE WHEN mh.mobile = mp.housetelephoneno THEN 4 ELSE 0 END +
+                            CASE WHEN mh.mobile = mp.officetelephoneno THEN 3 ELSE 0 END +
+                            CASE WHEN LOWER(mh.email) = LOWER(mp.email) THEN 7 ELSE 0 END
                         ) AS match_score
                     FROM 
                         medihealth__patients mh
@@ -91,16 +104,16 @@ def search_patient():
                             AND LOWER(mh.last_name) = LOWER(mp.plastname)
                             AND LOWER(mh.gender) = LOWER(mp.gender)
                             AND mh.birth_date = mp.dob
-                            AND mh.mobile = mp.mobile
+                            AND (mh.mobile = mp.mobile OR mh.mobile = mp.housetelephoneno OR mh.mobile = mp.officetelephoneno)
                             AND LOWER(mh.email) = LOWER(mp.email)
                         )
                     WHERE 
-                        (mh.mr_number = %s OR %s IS NULL) AND
-                        (LOWER(mh.first_name) = LOWER(%s) OR %s IS NULL) AND
-                        (LOWER(mh.last_name) = LOWER(%s) OR %s IS NULL) AND
-                        (LOWER(mh.gender) = LOWER(%s) OR %s IS NULL) AND
-                        (mh.birth_date = %s OR %s IS NULL) AND
-                        (mh.mobile = %s OR %s IS NULL) AND
+                        (mh.mr_number = %s OR %s IS NULL) OR
+                        (LOWER(mh.first_name) = LOWER(%s) OR %s IS NULL) OR
+                        (LOWER(mh.last_name) = LOWER(%s) OR %s IS NULL) OR
+                        (LOWER(mh.gender) = LOWER(%s) OR %s IS NULL) OR
+                        (mh.birth_date = %s OR %s IS NULL) OR
+                        (mh.mobile = %s OR %s IS NULL) OR
                         (LOWER(mh.email) = LOWER(%s) OR %s IS NULL)
                     ORDER BY match_score DESC;
                 """
@@ -116,11 +129,15 @@ def search_patient():
                     email, email
                 ))
 
-                # Fetch results and write them to the CSV file
+                # Fetch results and write them to the CSV file if match score > 0
                 results = cur.fetchall()
                 if results:
                     for row in results:
-                        writer.writerow(row)
+                        if row[19] > 0:
+                            writer.writerow(row)
+                            match_count += 1
+
+            print(f"Processing complete. {match_count} matches found.")
 
     except Exception as e:
         print(f"Error occurred: {e}")
@@ -130,7 +147,7 @@ def search_patient():
         if conn:
             cur.close()
             conn.close()
-            print("Database connection closed")
+            print("Database connection closed.")
 
 # Run the function to process all patients and write to CSV
 search_patient()
