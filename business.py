@@ -97,26 +97,26 @@ def search_patient():
                 mp.mobile AS pmobile,
                 mp.email AS pemail,
                 CASE WHEN mh.mr_number = mp.patient_id THEN 10 ELSE 0 END AS mr_number_score,
-                CASE WHEN LOWER(mh.first_name) = LOWER(mp.pfirstname) THEN 7 ELSE 0 END AS first_name_score,
-                CASE WHEN LOWER(mh.last_name) = LOWER(mp.plastname) THEN 8 ELSE 0 END AS last_name_score,
-                CASE WHEN LOWER(mh.first_name || ' ' || mh.last_name) = LOWER(mp.pfirstname || ' ' || mp.plastname) THEN 5 ELSE 0 END AS fullname_score,
-                CASE WHEN LOWER(mh.gender) = LOWER(mp.gender) THEN 5 ELSE 0 END AS gender_score,
-                CASE WHEN mh.birth_date = mp.dob THEN 8 ELSE 0 END AS birth_date_score,
+                CASE WHEN LOWER(mh.first_name) = LOWER(mp.pfirstname) THEN 3 ELSE 0 END AS first_name_score,
+                CASE WHEN LOWER(mh.last_name) = LOWER(mp.plastname) THEN 5 ELSE 0 END AS last_name_score,
+                CASE WHEN LOWER(mh.first_name || ' ' || mh.last_name) = LOWER(mp.pfirstname || ' ' || mp.plastname) THEN 8 ELSE 0 END AS fullname_score,
+                CASE WHEN LOWER(mh.gender) = LOWER(mp.gender) THEN 1 ELSE 0 END AS gender_score,
+                CASE WHEN mh.birth_date = mp.dob THEN 4 ELSE 0 END AS birth_date_score,
                 CASE WHEN mh.mobile = mp.mobile THEN 3 ELSE 0 END AS mobile_score,
                 CASE WHEN mh.mobile = mp.housetelephoneno THEN 3 ELSE 0 END AS housemobile_score,
                 CASE WHEN mh.mobile = mp.officetelephoneno THEN 3 ELSE 0 END AS officemobile_score,
-                CASE WHEN LOWER(mh.email) = LOWER(mp.email) THEN 7 ELSE 0 END AS email_score,
+                CASE WHEN LOWER(mh.email) = LOWER(mp.email) THEN 5 ELSE 0 END AS email_score,
                 (
                     CASE WHEN mh.mr_number = mp.patient_id THEN 10 ELSE 0 END +
-                    CASE WHEN LOWER(mh.first_name) = LOWER(mp.pfirstname) THEN 7 ELSE 0 END +
-                    CASE WHEN LOWER(mh.last_name) = LOWER(mp.plastname) THEN 8 ELSE 0 END +
-                    CASE WHEN LOWER(mh.first_name || ' ' || mh.last_name) = LOWER(mp.pfirstname || ' ' || mp.plastname) THEN 5 ELSE 0 END +
-                    CASE WHEN LOWER(mh.gender) = LOWER(mp.gender) THEN 5 ELSE 0 END +
-                    CASE WHEN mh.birth_date = mp.dob THEN 8 ELSE 0 END +
+                    CASE WHEN LOWER(mh.first_name) = LOWER(mp.pfirstname) THEN 3 ELSE 0 END +
+                    CASE WHEN LOWER(mh.last_name) = LOWER(mp.plastname) THEN 5 ELSE 0 END +
+                    CASE WHEN LOWER(mh.first_name || ' ' || mh.last_name) = LOWER(mp.pfirstname || ' ' || mp.plastname) THEN 8 ELSE 0 END +
+                    CASE WHEN LOWER(mh.gender) = LOWER(mp.gender) THEN 1 ELSE 0 END +
+                    CASE WHEN mh.birth_date = mp.dob THEN 4 ELSE 0 END +
                     CASE WHEN mh.mobile = mp.mobile THEN 3 ELSE 0 END +
                     CASE WHEN mh.mobile = mp.housetelephoneno THEN 3 ELSE 0 END +
                     CASE WHEN mh.mobile = mp.officetelephoneno THEN 3 ELSE 0 END +
-                    CASE WHEN LOWER(mh.email) = LOWER(mp.email) THEN 7 ELSE 0 END
+                    CASE WHEN LOWER(mh.email) = LOWER(mp.email) THEN 5 ELSE 0 END
                 ) AS match_score
             FROM 
                 medihealth__patients mh

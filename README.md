@@ -7,14 +7,17 @@ The code connects to an Amazon Redshift database using credentials stored in an 
 
 ## Scoring Rationale
 The rationale for scoring the matches between `medihealth_patients` and `mis_patients` is as follows:
+- A perfect match would be described by a match_score of 45 
+- Unless there is a match on mr_number, fullname(first_name and last_name) matches should considered uncertain and should be looked into. 
 
 - **mr_number & patient_id**: These serve as unique identifiers for a patient. A match between them has a high likelihood of identifying the patient, hence the high score of **10**.
-- **first_name & pfirstname**: First names are not unique, and many people can share the same first name. Therefore, it is scored **5**.
-- **last_name & plast_name**: Last names, though not entirely unique, are a stronger identifier than first names. Hence, this is scored **7**.
-- **gender**: Since gender is either male or female, it provides some information but is not a strong indicator, so it is scored **3**.
-- **birth_date & dob**: While multiple individuals may share the same birth date, the odds are low, making this a strong identifier with a score of **7**.
+- **first_name & pfirstname**: First names are not unique, and many people can share the same first name. Therefore, it is scored **3**.
+- **last_name & plast_name**: Last names, though not entirely unique, are a stronger identifier than first names. Hence, this is scored **5**.
+- **fullname**: this represents the combination of first_name and last_name thus adding their various match scores.
+- **gender**: Since gender is either male or female, it provides some information but is not a strong indicator, so it is scored **1**.
+- **birth_date & dob**: While multiple individuals may share the same birth date, the odds are low, making this a strong identifier with a score of **4**.
 - **email**: Email addresses are unique to individuals, but due to possible shared accounts, the score is **5**.
-- **mobile**: Mobile numbers are usually unique, but exceptions such as shared family numbers or multiple numbers for one person exist, so it is scored **5**.
+- **mobile**: Mobile numbers are usually unique, but exceptions such as shared family numbers or multiple numbers for one person exist, so it is scored **3**.
 - **housetelephoneno & officetelephoneno**: Both are compared with the mobile number from the MediHealth data and scored **3** each.
 
 ## Features
