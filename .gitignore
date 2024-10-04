@@ -1,3 +1,4 @@
 dbvenv/
 function.py/
 .env/
+.env
